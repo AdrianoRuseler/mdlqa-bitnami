@@ -85,7 +85,7 @@ export MOODLE_DATA_TO_PERSIST="${MOODLE_DATA_TO_PERSIST:-$MOODLE_BASE_DIR}"
 MOODLE_SKIP_BOOTSTRAP="${MOODLE_SKIP_BOOTSTRAP:-"${MOODLE_SKIP_INSTALL:-}"}"
 export MOODLE_SKIP_BOOTSTRAP="${MOODLE_SKIP_BOOTSTRAP:-}" # only used during the first initialization
 export MOODLE_INSTALL_EXTRA_ARGS="${MOODLE_INSTALL_EXTRA_ARGS:-}" # only used during the first initialization
-export MOODLE_SITE_NAME="${MOODLE_SITE_NAME:-New Site}" # only used during the first initialization
+#export MOODLE_SITE_NAME="${MOODLE_SITE_NAME:-MDLQA}" # only used during the first initialization
 export MOODLE_HOST="${MOODLE_HOST:-}" # only used during the first initialization
 export MOODLE_CRON_MINUTES="${MOODLE_CRON_MINUTES:-1}"
 export MOODLE_REVERSEPROXY="${MOODLE_REVERSEPROXY:-no}"
@@ -126,3 +126,5 @@ export PHP_DEFAULT_MEMORY_LIMIT="256M" # only used at build time
 export PHP_DEFAULT_MAX_INPUT_VARS="5000" # only used at build time
 
 # Custom environment variables may be defined below
+mdlver=$(cat /opt/bitnami/moodle/version.php | grep '$release' | cut -d\' -f 2) # Gets Moodle Version
+export MOODLE_SITE_NAME="${MOODLE_SITE_NAME:-"Moodle ${mdlver}"}" # only used during the first initialization
