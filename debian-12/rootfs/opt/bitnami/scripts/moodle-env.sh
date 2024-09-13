@@ -126,5 +126,5 @@ export PHP_DEFAULT_MEMORY_LIMIT="256M" # only used at build time
 export PHP_DEFAULT_MAX_INPUT_VARS="5000" # only used at build time
 
 # Custom environment variables may be defined below
-mdlver=$(cat /opt/bitnami/moodle/version.php | grep '$release' | cut -d\' -f 2) # Gets Moodle Version
+mdlver=$(cat "${MOODLE_BASE_DIR}/version.php" | grep '$release' | cut -d\' -f 2) # Gets Moodle Version
 export MOODLE_SITE_NAME="${MOODLE_SITE_NAME:-"Moodle ${mdlver}"}" # only used during the first initialization
