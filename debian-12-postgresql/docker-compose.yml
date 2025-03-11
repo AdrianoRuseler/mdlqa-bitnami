@@ -15,9 +15,9 @@ services:
 #      - POSTGRESQL_CHARACTER_SET=utf8mb4
 #      - POSTGRESQL_COLLATE=utf8mb4_unicode_ci
     volumes:
-      - 'postgresql_data:/bitnami/postgresql'
+      - 'db_data:/bitnami/postgresql'
     networks:
-      - moodle_network
+      - mdl_pgsql_net
   moodle:
     #image: docker.io/bitnami/moodle:4.4
     build:
@@ -42,14 +42,14 @@ services:
     depends_on:
       - postgresql
     networks:
-      - moodle_network
+      - mdl_pgsql_net
 volumes:
-  postgresql_data:
+  db_data:
     driver: local
   moodle_data:
     driver: local
   moodledata_data:
     driver: local
 networks:
-  moodle_network:
+  mdl_pgsql_net:
     driver: bridge
