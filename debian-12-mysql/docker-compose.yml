@@ -39,6 +39,14 @@ services:
       - mysql
     networks:
       - mdl_mysql_net
+  phpmyadmin:
+    image: docker.io/bitnami/phpmyadmin:5
+    ports:
+      - '8080:8080'
+    depends_on:
+      - mariadb
+    networks:
+      - mdl_mysql_net
 volumes:
   db_data:
     driver: local
