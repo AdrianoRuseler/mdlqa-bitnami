@@ -13,7 +13,9 @@ services:
       - MYSQL_CHARACTER_SET=utf8mb4
       - MYSQL_COLLATE=utf8mb4_unicode_ci
     volumes:
-      - 'mysql_data:/bitnami/mysql'
+      - 'bd_data:/bitnami/mysql'
+    networks:
+      - mdl_mysql_net
   moodle:
     #image: docker.io/bitnami/moodle:latest
     build:
@@ -35,10 +37,15 @@ services:
       - 'moodledata_data:/bitnami/moodledata'
     depends_on:
       - mysql
+    networks:
+      - mdl_mysql_net
 volumes:
-  mysql_data:
+  db_data:
     driver: local
   moodle_data:
     driver: local
   moodledata_data:
     driver: local
+networks:
+  mdl_mysql_net:
+    driver: bridge
