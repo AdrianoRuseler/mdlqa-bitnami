@@ -1,7 +1,7 @@
 # Copyright Broadcom, Inc. All Rights Reserved.
 # SPDX-License-Identifier: APACHE-2.0
 
-name: mdlqa-deb12-postgresql
+name: mdlqa-deb12-pgsql
 services:
   postgresql:
     image: docker.io/bitnami/postgresql:17
