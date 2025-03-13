@@ -17,6 +17,4 @@ $defaults['moodle']['pathtodot'] = '/usr/bin/dot';
 $defaults['moodle']['pathtopdftoppm'] = '/usr/bin/pdftoppm';
 $defaults['moodle']['pathtopython'] = '/usr/bin/python3';
 
-#$defaults['moodle']['auth_instructions'] = 'Usuário: user
-#Senha: bitnami';
 $defaults['moodle']['forcelogin'] = 1;

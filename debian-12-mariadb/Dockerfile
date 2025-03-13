@@ -55,7 +55,8 @@ RUN git clone --depth=1 --branch="main" https://github.com/moodle/moodle.git /op
 # RUN git clone --depth=1 --branch="main" https://git.in.moodle.com/moodle/integration.git /opt/bitnami/moodle
 RUN rm -rf /opt/bitnami/moodle/.git
 
-RUN wget https://raw.githubusercontent.com/AdrianoRuseler/mdlqa-bitnami/main/defaults-dist.php -O /opt/bitnami/moodle/local/defaults.php
+#RUN wget https://raw.githubusercontent.com/AdrianoRuseler/mdlqa-bitnami/main/defaults-dist.php -O #/opt/bitnami/moodle/local/defaults.php
+COPY defaults-dist.php /opt/bitnami/moodle/local/defaults.php
 
 RUN apt-get autoremove --purge -y wget rsync curl git && \
     apt-get update && apt-get upgrade -y && \
