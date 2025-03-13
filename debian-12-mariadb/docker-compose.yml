@@ -38,8 +38,8 @@ services:
       #- ALLOW_EMPTY_PASSWORD=yes
       - MOODLE_SMTP_HOST=mailpit
       - MOODLE_SMTP_PORT=1025
-      - MOODLE_SMTP_USER=
-      - MOODLE_SMTP_PASSWORD=
+      - MOODLE_SMTP_USER=admin
+      - MOODLE_SMTP_PASSWORD=${MOODLE_PASSWORD}
       - MOODLE_SMTP_PROTOCOL=
     volumes:
       - 'moodle_data:/bitnami/moodle'
