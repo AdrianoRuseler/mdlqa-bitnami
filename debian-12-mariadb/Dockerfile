@@ -81,6 +81,14 @@ ENV APACHE_HTTPS_PORT_NUMBER="" \
     LANGUAGE="en_US:en" \
     PATH="/opt/bitnami/common/bin:/opt/bitnami/php/bin:/opt/bitnami/php/sbin:/opt/bitnami/apache/bin:/opt/bitnami/postgresql/bin:/opt/bitnami/mysql/bin:$PATH"
 
+# Install Composer (if not already present in the image)
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+RUN git clone --depth=1 --branch="master" https://github.com/tmuras/moosh.git /opt/bitnami/moosh
+RUN cd /opt/bitnami/moosh && composer install
+RUN ln -s /opt/bitnami/moosh/moosh.php /usr/local/bin/moosh
+# Ensure Moosh is executable and test it
+RUN cd /opt/bitnami/moodle && moosh --list-commands || echo "Moosh installation failed"
+
 EXPOSE 8080 8443
 
 ENTRYPOINT [ "/opt/bitnami/scripts/moodle/entrypoint.sh" ]
