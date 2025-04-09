@@ -55,7 +55,7 @@ RUN rm -rf /opt/bitnami/moodle/.git
 #RUN wget https://raw.githubusercontent.com/AdrianoRuseler/mdlqa-bitnami/main/debian-12/defaults-dist.php -O #/opt/bitnami/moodle/local/defaults.php
 COPY defaults-dist.php /opt/bitnami/moodle/local/defaults.php
 
-RUN apt-get autoremove --purge -y wget rsync curl git && \
+RUN apt-get autoremove --purge -y wget rsync && \
     apt-get update && apt-get upgrade -y && \
     apt-get clean && rm -rf /var/lib/apt/lists /var/cache/apt/archives
 RUN localedef -c -f UTF-8 -i en_US en_US.UTF-8
