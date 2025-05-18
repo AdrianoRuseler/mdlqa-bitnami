@@ -1,20 +1,34 @@
 # Copyright Broadcom, Inc. All Rights Reserved.
 # SPDX-License-Identifier: APACHE-2.0
 
-name: mdlqa-deb12-pgsql
+name: mdlqa-pgsql
 services:
+#   postgresql:
+#     image: docker.io/bitnami/postgresql:17
+#     environment:
+#       # ALLOW_EMPTY_PASSWORD is recommended only for development.
+#       #- ALLOW_EMPTY_PASSWORD=yes
+#       - POSTGRESQL_USERNAME=bn_moodle
+#       - POSTGRESQL_PASSWORD=${POSTGRESQL_PASSWORD}
+#       - POSTGRESQL_DATABASE=bitnami_moodle
+# #      - POSTGRESQL_CHARACTER_SET=utf8mb4
+# #      - POSTGRESQL_COLLATE=utf8mb4_unicode_ci
+#     volumes:
+#       - 'db_data:/bitnami/postgresql'
+#     networks:
+#       - mdl_pgsql_net
   postgresql:
-    image: docker.io/bitnami/postgresql:17
+    image: postgres:alpine
     environment:
       # ALLOW_EMPTY_PASSWORD is recommended only for development.
       #- ALLOW_EMPTY_PASSWORD=yes
-      - POSTGRESQL_USERNAME=bn_moodle
-      - POSTGRESQL_PASSWORD=${POSTGRESQL_PASSWORD}
-      - POSTGRESQL_DATABASE=bitnami_moodle
+      - POSTGRES_DB=bitnami_moodle
+      - POSTGRES_USER=bn_moodle
+      - POSTGRES_PASSWORD=${POSTGRESQL_PASSWORD}
 #      - POSTGRESQL_CHARACTER_SET=utf8mb4
 #      - POSTGRESQL_COLLATE=utf8mb4_unicode_ci
     volumes:
-      - 'db_data:/bitnami/postgresql'
+      - db_data:/var/lib/postgresql/data
     networks:
       - mdl_pgsql_net
   moodle:
