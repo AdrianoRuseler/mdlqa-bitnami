@@ -33,7 +33,7 @@ RUN mkdir -p /tmp/bitnami/pkg/cache/ ; cd /tmp/bitnami/pkg/cache/ ; \
 	  "php-8.3.21-4-linux-${OS_ARCH}-debian-12" \
       "apache-2.4.63-2-linux-${OS_ARCH}-debian-12" \
 #      "mysql-client-11.4.6-0-linux-${OS_ARCH}-debian-12" \
-	  "postgresql-17.5.0-3-linux-${OS_ARCH}-debian-12" \
+	  "postgresql-client-17.5.0-1-linux-${OS_ARCH}-debian-12" \
 	  "libphp-8.3.21-1-linux-${OS_ARCH}-debian-12" \
 #      "moodle-4.4.3-0-linux-${OS_ARCH}-debian-12" \
     ) ; \
