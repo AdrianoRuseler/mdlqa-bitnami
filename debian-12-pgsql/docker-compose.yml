@@ -66,6 +66,17 @@ services:
       - postgresql
     networks:
       - mdl_pgsql_net
+
+  adminer:
+    image: adminer:latest
+    environment:
+      ADMINER_DEFAULT_SERVER: postgresql
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgresql
+    networks:
+      - mdl_pgsql_net
       # https://mailpit.axllent.org/
   mailpit: # You need to ensure you map the correct ports (default Web UI on 8025 and SMTP on 1025).
     image: axllent/mailpit:latest
