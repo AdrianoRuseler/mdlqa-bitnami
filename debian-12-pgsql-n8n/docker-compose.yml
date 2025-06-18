@@ -1,0 +1,134 @@
+# Copyright Broadcom, Inc. All Rights Reserved.
+# SPDX-License-Identifier: APACHE-2.0
+
+name: mdlqa-pgsql-n8n
+services:
+  postgresql:
+    image: postgres:alpine
+    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      #- ALLOW_EMPTY_PASSWORD=yes
+      - POSTGRES_DB=bitnami_moodle
+      - POSTGRES_USER=bn_moodle
+      - POSTGRES_PASSWORD=${POSTGRESQL_PASSWORD}
+#      - POSTGRESQL_CHARACTER_SET=utf8mb4
+#      - POSTGRESQL_COLLATE=utf8mb4_unicode_ci
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    networks:
+      - mdl_pgsql_net
+  moodle:
+    #image: docker.io/bitnami/moodle:4.4
+    build:
+        context: .
+        dockerfile: Dockerfile
+    ports:
+      - '80:8080'
+      - '443:8443'
+    environment:
+      - MOODLE_DATABASE_HOST=postgresql
+      - MOODLE_DATABASE_TYPE=pgsql
+      - MOODLE_DATABASE_PORT_NUMBER=5432
+      - MOODLE_DATABASE_USER=bn_moodle
+      - MOODLE_DATABASE_NAME=bitnami_moodle
+      - MOODLE_DATABASE_PASSWORD=${POSTGRESQL_PASSWORD}
+      - MOODLE_USERNAME=admin
+      - MOODLE_PASSWORD=${MOODLE_PASSWORD}
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      #- ALLOW_EMPTY_PASSWORD=yes
+      - MOODLE_SMTP_HOST=mailpit
+      - MOODLE_SMTP_PORT=1025
+      - MOODLE_SMTP_USER=admin
+      - MOODLE_SMTP_PASSWORD=${MOODLE_PASSWORD}
+      - MOODLE_SMTP_PROTOCOL=
+    volumes:
+      - 'moodle_data:/bitnami/moodle'
+      - 'moodledata_data:/bitnami/moodledata'
+    depends_on:
+      - postgresql
+      - mailpit
+    networks:
+      - mdl_pgsql_net 
+   # n8n service configuration
+  n8n:
+    # Use the official n8n Docker image.
+    # For a specific version, you can use n8n/n8n:1.0.0 (replace with desired version)
+    image: n8nio/n8n:latest
+    restart: always
+    # Map port 5678 of the host to port 5678 of the n8n container.
+    # This allows you to access n8n in your browser at http://localhost:5678
+    ports:
+      - "5678:5678"
+    environment:
+      # Set the base URL for n8n. Replace with your actual domain if deployed publicly.
+      # For local testing, http://localhost:5678 is usually sufficient.
+      N8N_BASIC_AUTH_ACTIVE: "true" # Enable basic authentication
+      N8N_BASIC_AUTH_USER: "user"   # Change this to a strong username
+      N8N_BASIC_AUTH_PASSWORD: "password" # Change this to a strong password
+      N8N_HOST: "localhost" # Set to your domain if deploying to production
+      N8N_PORT: 5678
+      N8N_PROTOCOL: http
+      WEBHOOK_URL: http://localhost:5678/ # This should match N8N_PROTOCOL and N8N_HOST/N8N_PORT
+      # Database connection settings for PostgreSQL
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_HOST: postgresql
+      DB_POSTGRESDB_PORT: 5432
+      DB_POSTGRESDB_DATABASE: bitnami_moodle
+      DB_POSTGRESDB_USER: bn_moodle
+      DB_POSTGRESDB_PASSWORD: ${POSTGRESQL_PASSWORD} # Change this to a strong password
+      # Optionally, increase max file size for uploads if needed
+      # N8N_MAX_UPLOAD_SIZE: 100mb
+    volumes:
+      # Persist n8n's data (e.g., workflow definitions, credentials) to a named volume.
+      # This ensures your data is not lost if the container is removed.
+      - n8n_data:/home/node/.n8n
+    depends_on:
+      - postgresql # Ensure PostgreSQL is started before n8n
+      - mailpit # Ensure Mailpit is started before n8n
+    networks:
+      - mdl_pgsql_net
+  adminer:
+    image: adminer:latest
+    environment:
+      ADMINER_DEFAULT_DB_DRIVER: pgsql
+      ADMINER_DEFAULT_SERVER: postgresql
+      ADMINER_DEFAULT_DB_NAME: bitnami_moodle
+      ADMINER_DEFAULT_DB_USER: bn_moodle
+      ADMINER_DEFAULT_DB_PASSWORD: ${POSTGRESQL_PASSWORD}
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgresql
+    networks:
+      - mdl_pgsql_net
+      # https://mailpit.axllent.org/
+  mailpit: # You need to ensure you map the correct ports (default Web UI on 8025 and SMTP on 1025).
+    image: axllent/mailpit:latest
+    volumes:
+      - 'mailpit_data:/data'
+    ports:
+      - 8025:8025
+      - 1025:1025
+    environment:
+      MP_MAX_MESSAGES: 5000
+      MP_DATA_FILE: /data/mailpit.db
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1 
+    networks:
+      - mdl_pgsql_net
+volumes:
+  db_data:
+    driver: local
+  moodle_data:
+    driver: local
+  moodledata_data:
+    driver: local
+  mailpit_data:
+    driver: local
+  pgadmin_data:
+    driver: local
+  n8n_data:
+    driver: local
+networks:
+  mdl_pgsql_net:
+    driver: bridge
